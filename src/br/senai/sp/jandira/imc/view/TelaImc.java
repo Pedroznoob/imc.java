@@ -1,16 +1,22 @@
-package br.senai.sp.jandira.imc.model;
+package br.senai.sp.jandira.imc.view;
+
+import br.senai.sp.jandira.imc.model.Aluno;
+import br.senai.sp.jandira.imc.model.Imc;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class TelaImc {
+    Aluno aluno = new Aluno();
 
     private JPanel painelTitulo = new JPanel();
     private JLabel labelTitulo = new JLabel("Índice de Massa Corporal - IMC");
 
     private JLabel lblTituloResultadoImc = new JLabel("Resultado do IMC");
-    private JLabel lblResultadoImc = new JLabel("25,00");
-    private JLabel lblStatusImc = new JLabel("Normal");
+    private JLabel lblResultadoImc = new JLabel();
+    private JLabel lblStatusImc = new JLabel();
 
     private  JLabel lblPeso = new JLabel("Peso:");
     private JTextField txtPeso = new JTextField();
@@ -20,6 +26,10 @@ public class TelaImc {
 
     private  JButton btnCalcular = new JButton("Calcular");
     private  JButton btnLimpar = new JButton("Limpar");
+
+    private String imagePath = "../images/";
+    private Icon iconBtnCalcular = new ImageIcon(getClass().getResource(imagePath + "calc2.png"));
+    private Icon iconBtnLimpar = new ImageIcon(getClass().getResource(imagePath + "restart24.png"));
 
 
     public TelaImc(){
@@ -45,11 +55,11 @@ public class TelaImc {
         lblPeso.setBounds(10,70,150,30);
         txtPeso.setBounds(10,100,150,35);
         txtPeso.setFont(new Font("Arial", Font.BOLD, 24));
+//        aluno.setPeso(Integer.parseInt(txtPeso.getText()));
 
         lblAltura.setBounds(10, 130,150,30);
         txtAltura.setBounds(10,160, 150,35);
         txtAltura.setFont(new Font("Arial", Font.BOLD, 24));
-
 
         lblTituloResultadoImc.setBounds(225,70,250,30);
         lblTituloResultadoImc.setForeground(Color.BLUE);
@@ -67,9 +77,31 @@ public class TelaImc {
         lblStatusImc.setHorizontalAlignment(JLabel.CENTER);
 
         btnCalcular.setBounds(10,210,150,30);
-        btnCalcular.setFont(new Font("Arial", Font.BOLD, 20));
+        btnCalcular.setIcon(iconBtnCalcular);
+        btnCalcular.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Imc imc = new Imc();
+                if (txtAltura.getText() != "") {
+                    aluno.setAltura(Double.parseDouble((txtAltura.getText())));
+                }
+                if (txtPeso.getText() != "") {
+                    aluno.setPeso(Integer.parseInt(txtPeso.getText()));
+                }
+                imc.calcularIMC();
+
+            }
+        });
+
         btnLimpar.setBounds(180,210,150,30);
-        btnLimpar.setFont(new Font("Arial", Font.BOLD, 20));
+        btnLimpar.setIcon(iconBtnLimpar);
+        btnLimpar.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                limparTela();
+            }
+        });
+
 
 
         tela.getContentPane().add(painelTitulo);
@@ -82,6 +114,17 @@ public class TelaImc {
         tela.getContentPane().add(lblStatusImc);
         tela.getContentPane().add(btnCalcular);
         tela.getContentPane().add(btnLimpar);
+
         tela.setVisible(true);
     }
+
+
+    private void limparTela(){
+        txtAltura.setText("");
+        txtPeso.setText("");
+        lblStatusImc.setText("");
+        lblResultadoImc.setText("");
+        txtPeso.requestFocus();
+    }
+
 }
